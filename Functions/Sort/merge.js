@@ -1,4 +1,4 @@
-function mergeSort(arr) {
+export function mergeSort(arr) {
   let mid = arr.length / 2;
   if (arr.length < 2) {
     return arr;
@@ -6,7 +6,7 @@ function mergeSort(arr) {
   const left = arr.splice(0, mid);
   return merge(mergeSort(left), mergeSort(arr));
 }
-function merge(left, right) {
+export function merge(left, right) {
   let arr = [];
   while (left.length && right.length) {
     if (left[0] < right[0]) {

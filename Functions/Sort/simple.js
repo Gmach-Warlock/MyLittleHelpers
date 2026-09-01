@@ -6,7 +6,7 @@ function buildArray(length) {
   return arr;
 }
 
-function bubbleSort(arr) {
+export function bubbleSort(arr) {
   for (let i = 0; i < arr.length; i++) {
     for (let j = 0; j < arr.length - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
@@ -22,7 +22,7 @@ let arr1 = buildArray(100);
 console.log(arr1);
 console.log(bubbleSort(arr1));
 
-function selectionSort(arr) {
+export function selectionSort(arr) {
   for (let i = 0; i < arr.length; i++) {
     let min = i;
     for (let j = i + 1; j < arr.length; j++) {
@@ -40,7 +40,7 @@ let arr2 = buildArray(100);
 console.log(arr2);
 console.log(selectionSort(arr2));
 
-function insertionSort(arr) {
+export function insertionSort(arr) {
   for (let i = 1; i < arr.length; i++) {
     let j = i - 1;
     let current = arr[i];
@@ -55,8 +55,3 @@ function insertionSort(arr) {
 let arr3 = buildArray(100);
 console.log(arr3);
 console.log(selectionSort(arr3));
-
-function binarySearch(sortedArray, item) {
-  let mid = sortedArray.length / 2;
-  if (sortedArray[mid] === item) return item;
-}
