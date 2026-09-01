@@ -24,15 +24,13 @@ console.log(bubbleSort(arr1));
 
 function selectionSort(arr) {
   for (let i = 0; i < arr.length; i++) {
-    let min = i;
+    let minIndex = i;
     for (let j = i + 1; j < arr.length; j++) {
-      if (arr[j] < arr[min]) {
-        min = j;
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
       }
     }
-    if (min !== i) {
-      [arr[i], arr[min]] = [arr[min], arr[i]];
-    }
+    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
   }
   return arr;
 }
@@ -46,7 +44,6 @@ function insertionSort(arr) {
     let current = arr[i];
     while (j > -1 && current < arr[j]) {
       arr[j] = arr[j + 1];
-      j--;
     }
     arr[j + 1] = current;
   }
@@ -55,8 +52,4 @@ function insertionSort(arr) {
 let arr3 = buildArray(100);
 console.log(arr3);
 console.log(selectionSort(arr3));
-
-function binarySearch(sortedArray, item) {
-  let mid = sortedArray.length / 2;
-  if (sortedArray[mid] === item) return item;
-}
+console.log(binarySearch(21, arr3, 0, arr3.length - 1));
