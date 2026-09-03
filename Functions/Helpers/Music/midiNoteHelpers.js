@@ -36,7 +36,7 @@ const flatsArray = [
 // we then iterate until we get to the note, incrementing a variable to use for n, raising or lowering the octave at C, depending on our direction
 // once we have n, we plug it in and return the answer
 // helper
-function findNumOfSemitones(pitch, octave, arr, direction) {
+export function findNumOfSemitones(pitch, octave, arr, direction) {
   let cIndex = 0;
   let cOctave = 4;
   let n = 0;
@@ -60,7 +60,7 @@ function findNumOfSemitones(pitch, octave, arr, direction) {
   return n;
 }
 // convert string version to symbols
-function convertToMusicalSymbols(pitch) {
+export function convertToMusicalSymbols(pitch) {
   let note = pitch[0].toUpperCase();
   let extension = pitch.slice(1).toLowerCase();
   if (extension === "flat") extension = "b";
@@ -73,7 +73,7 @@ function convertToMusicalSymbols(pitch) {
   return cleanedNote;
 }
 // determine direction from A4
-function determineDirection(pitch, octave) {
+export function determineDirection(pitch, octave) {
   let cleanedNote = convertToMusicalSymbols(pitch);
   let isAboveA =
     cleanedNote === "A#" || cleanedNote === "Bb" || cleanedNote === "B";
@@ -81,7 +81,7 @@ function determineDirection(pitch, octave) {
   let direction = isForward ? "forward" : "reverse";
   return direction;
 }
-function determineArray(pitch) {
+export function determineArray(pitch) {
   let cleanedNote = convertToMusicalSymbols(pitch);
   let useFlats = cleanedNote[1] === "b";
   let arr = useFlats ? flatsArray : sharpsArray;
@@ -104,11 +104,10 @@ export function findFrequency(pitch, octave, refValue = 440) {
 console.log(findFrequency("dsharp", 5));
 // A4 is Note 69
 // I'm using my helpers for this as well since it's all used together in my factory functions
-function findMidiValue(pitch, octave) {
+export function findMidiValue(pitch, octave) {
   let cleanedNote = convertToMusicalSymbols(pitch);
   let direction = determineDirection(cleanedNote, octave);
   let arr = determineArray(cleanedNote);
   let n = findNumOfSemitones(cleanedNote, octave, arr, direction);
   return 69 + n;
 }
-console.log(findMidiValue("E", 3));
