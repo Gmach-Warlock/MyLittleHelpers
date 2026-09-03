@@ -1,4 +1,4 @@
-const sharpsArray = [
+export const sharpsArray = [
   "A",
   "A#",
   "B",
@@ -12,7 +12,7 @@ const sharpsArray = [
   "G",
   "G#",
 ];
-const flatsArray = [
+export const flatsArray = [
   "A",
   "Bb",
   "B",
@@ -101,7 +101,6 @@ export function findFrequency(pitch, octave, refValue = 440) {
   let calculatedFrequency = refValue * a ** n;
   return calculatedFrequency;
 }
-console.log(findFrequency("dsharp", 5));
 // A4 is Note 69
 // I'm using my helpers for this as well since it's all used together in my factory functions
 export function findMidiValue(pitch, octave) {
