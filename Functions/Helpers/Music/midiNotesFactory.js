@@ -6,6 +6,7 @@ import {
   findMidiValue,
   determineArray,
 } from "./midiNoteHelpers.js";
+import { MidiNote, MidiKeyboard } from "../../../Classes/note.js";
 
 export function makeNoteObject(pitch, octave, refValue = 440) {
   const cleanedNote = convertToMusicalSymbols(pitch);
@@ -13,19 +14,12 @@ export function makeNoteObject(pitch, octave, refValue = 440) {
   const noteMidiValue = findMidiValue(cleanedNote, octave);
   return new MidiNote(cleanedNote, octave, noteFrequency, noteMidiValue);
 }
-export class MidiKeyboard {
-  constructor(refValue, notesArray) {
-    this.refValue = refValue;
-    this.notes = notesArray;
-  }
-}
-
 export function createMidiNotesObject(
   refValue,
   startPitch,
   startOctave,
   endPitch,
-  endOctave
+  endOctave,
 ) {
   let currentOctave = startOctave;
   let cleanedPitch = convertToMusicalSymbols(startPitch);
@@ -33,9 +27,6 @@ export function createMidiNotesObject(
   let arrToUse = determineArray(startPitch);
   let len = arrToUse.length;
   const notesObject = {};
-  console.log(
-    `cO: ${currentOctave}, cP: ${cleanedPitch} cI: ${currentIndex} arr: ${arrToUse}`
-  );
   if (arrToUse[currentIndex] === "C") currentOctave--;
   while (arrToUse[currentIndex] !== endPitch || currentOctave !== endOctave) {
     if (arrToUse[currentIndex] === "C") {
@@ -44,14 +35,12 @@ export function createMidiNotesObject(
     notesObject[arrToUse[currentIndex] + currentOctave] = makeNoteObject(
       arrToUse[currentIndex],
       currentOctave,
-      refValue
+      refValue,
     );
     currentIndex = (currentIndex + 1) % len;
   }
-  console.log(`end pitch ${endPitch}`);
   return notesObject;
 }
-
 console.log(makeNoteObject("Gb", 4, 440));
 console.log(createMidiNotesObject(440, "C", 3, "C", 6));
 

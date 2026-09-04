@@ -38,17 +38,18 @@ export const flatsArray = [
 // helper
 export function findNumOfSemitones(pitch, octave, arr, direction) {
   let cIndex = 0;
-  let cOctave = 4;
+  let cOctave = 0;
   let n = 0;
   let max = 200;
   let len = arr.length;
   // make sure we get forward or reverse!
   if (direction !== "forward" && direction !== "reverse") return;
+  cOctave = 4;
   if (direction === "forward") {
     while ((arr[cIndex] !== pitch || cOctave !== octave) && n < max) {
-      if (arr[cIndex] === "C") cOctave++;
       cIndex = (cIndex + 1) % len;
       n++;
+      if (arr[cIndex] === "C") cOctave++;
     }
   } else {
     while ((arr[cIndex] !== pitch || cOctave !== octave) && n > -max) {
