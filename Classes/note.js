@@ -1,21 +1,21 @@
-export class MNote {
+export class MidiNote {
   constructor(pitch, octave, frequency, midiValue) {
-    this._pitch = pitch;
-    this._octave = octave;
-    this._frequency = frequency;
-    this._midiValue = midiValue;
+    this.pitch = pitch;
+    this.octave = octave;
+    this.frequency = frequency;
+    this.midiValue = midiValue;
   }
   get pitch() {
-    return this._pitch;
+    return this.pitch;
   }
   get octave() {
-    return this._octave;
+    return this.octave;
   }
   get frequency() {
-    return this._frequency;
+    return this.frequency;
   }
   get midiValue() {
-    return this._midiValue;
+    return this.midiValue;
   }
   set pitch(newPitch) {
     this._pitch = newPitch;
@@ -28,5 +28,24 @@ export class MNote {
   }
   set midiValue(newMidiValue) {
     this._midiValue = newMidiValue;
+  }
+}
+
+export class MidiKeyboard {
+  constructor(refValue, notes) {
+    this._refValue = refValue;
+    this._notes = notes;
+  }
+  get refValue() {
+    return this._refValue;
+  }
+  get notes() {
+    return this._notes;
+  }
+  set refValue(newRefValue) {
+    this._refValue = newRefValue;
+  }
+  set notes(newNotes) {
+    this._notes = newNotes;
   }
 }

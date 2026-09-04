@@ -7,39 +7,6 @@ import {
   determineArray,
 } from "./midiNoteHelpers.js";
 
-export class MidiNote {
-  constructor(pitch, octave, frequency, midiValue) {
-    this.pitch = pitch;
-    this.octave = octave;
-    this.frequency = frequency;
-    this.midiValue = midiValue;
-  }
-  get pitch() {
-    return this.pitch;
-  }
-  get octave() {
-    return this.octave;
-  }
-  get frequency() {
-    return this.frequency;
-  }
-  get midiValue() {
-    return this.midiValue;
-  }
-  set pitch(newPitch) {
-    this._pitch = newPitch;
-  }
-  set octave(newOctave) {
-    this._octave = newOctave;
-  }
-  set frequency(newFrequency) {
-    this._frequency = newFrequency;
-  }
-  set midiValue(newMidiValue) {
-    this._midiValue = newMidiValue;
-  }
-}
-
 export function makeNoteObject(pitch, octave, refValue = 440) {
   const cleanedNote = convertToMusicalSymbols(pitch);
   const noteFrequency = findFrequency(cleanedNote, octave, refValue);
@@ -53,7 +20,7 @@ export class MidiKeyboard {
   }
 }
 
-export function createMidiNotesArray(
+export function createMidiNotesObject(
   refValue,
   startPitch,
   startOctave,
@@ -65,18 +32,29 @@ export function createMidiNotesArray(
   let currentIndex = flatsArray.indexOf(cleanedPitch);
   let arrToUse = determineArray(startPitch);
   let len = arrToUse.length;
-  const noteObjectsArray = [];
+  const notesObject = {};
   console.log(
     `cO: ${currentOctave}, cP: ${cleanedPitch} cI: ${currentIndex} arr: ${arrToUse}`
   );
   if (arrToUse[currentIndex] === "C") currentOctave--;
   while (arrToUse[currentIndex] !== endPitch || currentOctave !== endOctave) {
-    if (arrToUse[currentIndex] === "C") currentOctave++;
-    noteObjectsArray.push(`check ${currentIndex}`);
+    if (arrToUse[currentIndex] === "C") {
+      currentOctave++;
+    }
+    notesObject[arrToUse[currentIndex] + currentOctave] = makeNoteObject(
+      arrToUse[currentIndex],
+      currentOctave,
+      refValue
+    );
     currentIndex = (currentIndex + 1) % len;
   }
-
-  return noteObjectsArray;
+  console.log(`end pitch ${endPitch}`);
+  return notesObject;
 }
 
-console.log(createMidiNotesArray(440, "C", 3, "C", 6));
+console.log(makeNoteObject("Gb", 4, 440));
+console.log(createMidiNotesObject(440, "C", 3, "C", 6));
+
+export function createMidiKeyboard(refValue, notes) {
+  return new MidiKeyboard(refValue, notes);
+}
