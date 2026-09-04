@@ -19,14 +19,20 @@ export function createMidiNotesObject(
   startPitch,
   startOctave,
   endPitch,
-  endOctave,
+  endOctave
 ) {
   let currentOctave = startOctave;
-  let cleanedPitch = convertToMusicalSymbols(startPitch);
-  let currentIndex = flatsArray.indexOf(cleanedPitch);
-  let arrToUse = determineArray(startPitch);
-  let len = arrToUse.length;
+  let cleanedStartPitch = convertToMusicalSymbols(startPitch);
+  let cleanedEndPitch = convertToMusicalSymbols(endPitch);
+  let currentIndex = flatsArray.indexOf(cleanedStartPitch);
+  let startMidiValue = findMidiValue(cleanedStartPitch, startOctave);
+  let endMidiValue = findMidiValue(cleanedEndPitch, endOctave);
+  let distance = endMidiValue - startMidiValue;
+  const arrToUse = determineArray(startPitch);
+  const len = arrToUse.length;
   const notesObject = {};
+
+  //
   if (arrToUse[currentIndex] === "C") currentOctave--;
   while (arrToUse[currentIndex] !== endPitch || currentOctave !== endOctave) {
     if (arrToUse[currentIndex] === "C") {
@@ -35,7 +41,7 @@ export function createMidiNotesObject(
     notesObject[arrToUse[currentIndex] + currentOctave] = makeNoteObject(
       arrToUse[currentIndex],
       currentOctave,
-      refValue,
+      refValue
     );
     currentIndex = (currentIndex + 1) % len;
   }

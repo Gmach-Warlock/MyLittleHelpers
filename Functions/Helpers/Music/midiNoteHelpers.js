@@ -37,13 +37,21 @@ export const flatsArray = [
 // once we have n, we plug it in and return the answer
 // helper
 export function findNumOfSemitones(pitch, octave, arr, direction) {
+  // type guards
+  if (
+    typeof pitch !== "string" ||
+    typeof octave !== number ||
+    typeof direction !== "string" ||
+    !Array.isArray(arr)
+  )
+    return;
+  // make sure we get forward or reverse!
+  if (direction !== "forward" && direction !== "reverse") return;
   let cIndex = 0;
   let cOctave = 0;
   let n = 0;
-  let max = 200;
-  let len = arr.length;
-  // make sure we get forward or reverse!
-  if (direction !== "forward" && direction !== "reverse") return;
+  const max = 200;
+  const len = arr.length;
   cOctave = 4;
   if (direction === "forward") {
     while ((arr[cIndex] !== pitch || cOctave !== octave) && n < max) {
@@ -62,6 +70,10 @@ export function findNumOfSemitones(pitch, octave, arr, direction) {
 }
 // convert string version to symbols
 export function convertToMusicalSymbols(pitch) {
+  if (typeof pitch !== "string") {
+    console.log("Invalid type");
+    return;
+  }
   let note = pitch[0].toUpperCase();
   let extension = pitch.slice(1).toLowerCase();
   if (extension === "flat") extension = "b";
@@ -70,43 +82,52 @@ export function convertToMusicalSymbols(pitch) {
     console.log(`Invalid note extension`);
     return;
   }
-  let cleanedNote = note + extension;
+  const cleanedNote = note + extension;
   return cleanedNote;
 }
 // determine direction from A4
 export function determineDirection(pitch, octave) {
-  let cleanedNote = convertToMusicalSymbols(pitch);
-  let isAboveA =
+  if (typeof pitch !== "string" || typeof octave !== number) return;
+  const cleanedNote = convertToMusicalSymbols(pitch);
+  const isAboveA =
     cleanedNote === "A#" || cleanedNote === "Bb" || cleanedNote === "B";
-  let isForward = octave > 4 || (octave === 4 && isAboveA);
-  let direction = isForward ? "forward" : "reverse";
+  const isForward = octave > 4 || (octave === 4 && isAboveA);
+  const direction = isForward ? "forward" : "reverse";
   return direction;
 }
 export function determineArray(pitch) {
-  let cleanedNote = convertToMusicalSymbols(pitch);
-  let arr = cleanedNote[1] === "b" ? flatsArray : sharpsArray;
+  if (typeof pitch !== "number") return;
+  const cleanedNote = convertToMusicalSymbols(pitch);
+  const arr = cleanedNote[1] === "b" ? flatsArray : sharpsArray;
   return arr;
 }
 // main function
 export function findFrequency(pitch, octave, refValue = 440) {
+  if (
+    typeof pitch !== "string" ||
+    typeof octave !== "number" ||
+    typeof refValue !== "number"
+  )
+    return;
   // return the ref value if note is A4
   if (pitch === "A" && octave === 4) return refValue;
-  let cleanedNote = convertToMusicalSymbols(pitch);
+  const cleanedNote = convertToMusicalSymbols(pitch);
   // set flags and determine logical variables
-  let direction = determineDirection(cleanedNote, octave);
-  let arr = determineArray(cleanedNote);
-  let n = findNumOfSemitones(cleanedNote, octave, arr, direction);
+  const direction = determineDirection(cleanedNote, octave);
+  const arr = determineArray(cleanedNote);
+  const n = findNumOfSemitones(cleanedNote, octave, arr, direction);
   // solve for freqency (frequency = refValue * a ** n)
-  let a = 2 ** (1 / 12); // 12th root of 2
-  let calculatedFrequency = refValue * a ** n;
+  const a = 2 ** (1 / 12); // 12th root of 2
+  const calculatedFrequency = refValue * a ** n;
   return calculatedFrequency;
 }
 // A4 is Note 69
 // I'm using my helpers for this as well since it's all used together in my factory functions
 export function findMidiValue(pitch, octave) {
-  let cleanedNote = convertToMusicalSymbols(pitch);
-  let direction = determineDirection(cleanedNote, octave);
-  let arr = determineArray(cleanedNote);
-  let n = findNumOfSemitones(cleanedNote, octave, arr, direction);
+  if (typeof pitch !== "string" || typeof octave !== "number") return;
+  const cleanedNote = convertToMusicalSymbols(pitch);
+  const direction = determineDirection(cleanedNote, octave);
+  const arr = determineArray(cleanedNote);
+  const n = findNumOfSemitones(cleanedNote, octave, arr, direction);
   return 69 + n;
 }
