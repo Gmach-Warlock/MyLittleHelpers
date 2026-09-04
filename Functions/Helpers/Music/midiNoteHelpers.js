@@ -83,8 +83,7 @@ export function determineDirection(pitch, octave) {
 }
 export function determineArray(pitch) {
   let cleanedNote = convertToMusicalSymbols(pitch);
-  let useFlats = cleanedNote[1] === "b";
-  let arr = useFlats ? flatsArray : sharpsArray;
+  let arr = cleanedNote[1] === "b" ? flatsArray : sharpsArray;
   return arr;
 }
 // main function
