@@ -40,7 +40,7 @@ export function findNumOfSemitones(pitch, octave, arr, direction) {
   // type guards
   if (
     typeof pitch !== "string" ||
-    typeof octave !== number ||
+    typeof octave !== "number" ||
     typeof direction !== "string" ||
     !Array.isArray(arr)
   )
@@ -87,7 +87,7 @@ export function convertToMusicalSymbols(pitch) {
 }
 // determine direction from A4
 export function determineDirection(pitch, octave) {
-  if (typeof pitch !== "string" || typeof octave !== number) return;
+  if (typeof pitch !== "string" || typeof octave !== "number") return;
   const cleanedNote = convertToMusicalSymbols(pitch);
   const isAboveA =
     cleanedNote === "A#" || cleanedNote === "Bb" || cleanedNote === "B";
@@ -96,7 +96,7 @@ export function determineDirection(pitch, octave) {
   return direction;
 }
 export function determineArray(pitch) {
-  if (typeof pitch !== "number") return;
+  if (typeof pitch !== "string") return;
   const cleanedNote = convertToMusicalSymbols(pitch);
   const arr = cleanedNote[1] === "b" ? flatsArray : sharpsArray;
   return arr;
