@@ -34,7 +34,7 @@ export function cleanPitch(pitch) {
     if (secondExtension === "sharp") secondExtension = "#";
     if (secondExtension === "flat") secondExtension = "b";
     console.log(
-      `checking extensions, first: ${firstExtension}, second: ${secondExtension}`,
+      `checking extensions, first: ${firstExtension}, second: ${secondExtension}`
     );
     if (
       !(
@@ -49,7 +49,6 @@ export function cleanPitch(pitch) {
   }
   return note + extension;
 }
-console.log(cleanPitch("C#/Db", 5));
 
 export function determineDirection(pitch, octave) {
   const isAboveA = ["A#", "Bb", "A#/Bb", "B"].includes(pitch);
@@ -57,4 +56,55 @@ export function determineDirection(pitch, octave) {
     octave > 4 || (octave === 4 && isAboveA) ? "forward" : "reverse";
   return direction;
 }
-console.log(determineDirection("C#/Db", 5));
+
+export function findNumberOfSemitones(pitch, octave) {
+  let cleanedPitch = cleanPitch(pitch);
+  let direction = determineDirection(pitch, octave);
+  let currentIndex = 0;
+  let currentOctave = 4;
+  let n = 0;
+  let len = notesArray.length;
+  if (cleanedPitch[1] === "#" || cleanedPitch[1] === "b") {
+    while (
+      !notesArray[currentIndex].includes(cleanedPitch) ||
+      currentOctave !== octave
+    ) {
+      if (direction === "forward") {
+        currentIndex = (currentIndex + 1) % len;
+        n++;
+        if (notesArray[currentIndex] === "C") currentOctave++;
+      } else {
+        if (notesArray[currentIndex] === "C") currentOctave--;
+        currentIndex = (currentIndex - 1 + len) % len;
+        n--;
+      }
+    }
+  } else {
+    while (
+      notesArray[currentIndex] !== cleanedPitch ||
+      currentOctave !== octave
+    ) {
+      if (direction === "forward") {
+        currentIndex = (currentIndex + 1) % len;
+        n++;
+        if (notesArray[currentIndex] === "C") currentOctave++;
+      } else {
+        if (notesArray[currentIndex] === "C") currentOctave--;
+        currentIndex = (currentIndex - 1 + len) % len;
+        n--;
+      }
+    }
+  }
+
+  return n;
+}
+
+export function findMidiValue(pitch, octave, numberOfSemitones = undefined) {
+  if (numberOfSemitones !== undefined && numberOfSemitones !== null) return 69 + numberOfSemitones;
+  let cleanedPitch = cleanPitch(pitch);
+  let n = findNumberOfSemitones(cleanedPitch, octave);
+  let midiValue = 69 + n;
+  return midiValue;
+}
+
+console.log(findMidiValue("C", 4));
