@@ -9,11 +9,11 @@ function calculator(num1, num2, operator) {
   }
   operator = operator.toLowerCase();
   if (
-    operator !== "add" ||
-    operator !== "subtract" ||
-    operator !== "multiply" ||
-    operator !== "divide" ||
-    operator !== "exponent" ||
+    operator !== "add" &&
+    operator !== "subtract" &&
+    operator !== "multiply" &&
+    operator !== "divide" &&
+    operator !== "exponent" &&
     operator !== "ln"
   ) {
     console.log(`Invalid operator type`);
@@ -25,6 +25,7 @@ function calculator(num1, num2, operator) {
     multiply: () => num1 * num2,
     divide: () => num1 / num2,
     exponent: () => num1 ** num2,
+    ln: (a) => Math.log(a),
   };
   return operatorMap[operator]();
 }

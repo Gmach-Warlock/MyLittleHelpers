@@ -10,12 +10,20 @@ import { MidiNote, MidiKeyboard } from "../../../Classes/note.js";
 
 export function makeNoteObject(pitch, octave, refValue = 440) {
   const cleanedNote = convertToMusicalSymbols(pitch);
+  const mainArray = determineArray(pitch, octave);
+  console.log(mainArray);
+  const noteIndex = mainArray.indexOf(cleanedNote);
+  // if note has # or b use a combo with both (C#/Db)
+  const midiNote = cleanedNote[1]
+    ? sharpsArray[noteIndex] + flatsArray[noteIndex]
+    : cleanedNote;
+  // can still use the original pitch variable for these
   const noteFrequency = findFrequency(cleanedNote, octave, refValue);
   const noteMidiValue = findMidiValue(cleanedNote, octave);
-  return new MidiNote(cleanedNote, octave, noteFrequency, noteMidiValue);
+  return new MidiNote(midiNote, octave, noteFrequency, noteMidiValue);
 }
 
-console.log(makeNoteObject("Gb", 4, 440));
+console.log(makeNoteObject("D#", 4, 440));
 export function makeMidiNotesObject(
   startPitch,
   startOctave,
@@ -48,15 +56,21 @@ export function makeMidiNotesObject(
   // let variables
   let currentOctave = startOctave;
   let currentIndex;
-  let currentPitch = mainArray[currentIndex];
+  let currentPitch;
   let currentMidiValue = startMidiValue;
   // use distance in for loops
   for (let i = 0; i <= distance; i++) {
     currentIndex = (i + startingIndex) % len;
+    currentPitch = mainArray[currentIndex];
+    currentIndex = (i + startingIndex) % len;
     console.log(mainArray[currentIndex] + currentOctave);
     if (mainArray[currentIndex] === "C") currentOctave++;
+    newObject[currentPitch] = makeNoteObject(
+      currentPitch,
+      currentOctave,
+      refValue,
+    );
   }
-
   return newObject;
 }
 console.log(makeMidiNotesObject("C", 3, "G", 5));

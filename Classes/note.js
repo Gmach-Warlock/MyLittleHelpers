@@ -1,4 +1,19 @@
 export class MidiNote {
+  notesArray = [
+    "A",
+    "A#/Bb",
+    "B",
+    "C",
+    "C#/Db",
+    "D",
+    "D#/Eb",
+    "E",
+    "F",
+    "F#/Gb",
+    "G",
+    "G#/Ab",
+  ];
+
   constructor(pitch, octave, frequency, midiValue) {
     this.pitch = pitch;
     this.octave = octave;
