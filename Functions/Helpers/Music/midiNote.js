@@ -12,6 +12,7 @@ export const notesArray = [
   "G",
   "G#/Ab",
 ];
+// converts sharp to # and flat to b
 export function convertToSymbols(string) {
   if (string !== "sharp" && string !== "flat") {
     console.log(`Invalid extension`);
@@ -23,7 +24,7 @@ export function convertToSymbols(string) {
   };
   return stringMap[string];
 }
-
+// converts to symbols, and checks for combo versions of the notes as well eg. C#/Db or Csharp/Dflat
 export function cleanPitch(pitch) {
   // type guards
   if (typeof pitch !== "string") {
@@ -32,18 +33,18 @@ export function cleanPitch(pitch) {
   }
   let note = pitch[0].toUpperCase();
   let extension = pitch.slice(1).toLowerCase();
-  if (extension && extension === "sharp") extension = "#";
-  if (extension && extension === "flat") extension = "b";
+  if (extension && (extension === "sharp" || extension === "flat"))
+    extension = convertToSymbols(extension);
   // if setup like Csharp/Dflat
   if (extension && extension.includes("/")) {
     let extensionsArray = extension.split("/");
     let firstExtension = extensionsArray[0];
     let secondNote = extensionsArray[1][0].toUpperCase();
     let secondExtension = extensionsArray[1].slice(1);
-    if (firstExtension === "sharp") firstExtension = "#";
-    if (firstExtension === "flat") firstExtension = "b";
-    if (secondExtension === "sharp") secondExtension = "#";
-    if (secondExtension === "flat") secondExtension = "b";
+    if (firstExtension === "sharp" || firstExtension === "flat")
+      firstExtension = convertToSymbols(firstExtension);
+    if (secondExtension === "sharp" || secondExtension === "flat")
+      secondExtension = convertToSymbols(secondExtension);
     console.log(
       `checking extensions, first: ${firstExtension}, second: ${secondExtension}`
     );
@@ -60,25 +61,33 @@ export function cleanPitch(pitch) {
   }
   return note + extension;
 }
-
+// determine direction a note is from A4. This is used to find frequency in equal temperment scale.
 export function determineDirection(pitch, octave) {
   const isAboveA = ["A#", "Bb", "A#/Bb", "B"].includes(pitch);
   const direction =
     octave > 4 || (octave === 4 && isAboveA) ? "forward" : "reverse";
   return direction;
 }
-
-export function findNumberOfSemitones(pitch, octave) {
-  let cleanedPitch = cleanPitch(pitch);
-  let direction = determineDirection(pitch, octave);
-  let currentIndex = 0;
-  let currentOctave = 4;
+// determine number of semitones between two notes. The default starting note is A4. Optional parameters to change the starting note.
+export function findNumberOfSemitones(
+  targetPitch,
+  targetOctave,
+  startingPitch = "A",
+  startingOctave = 4
+) {
+  // clean up the pitches and determine directional flow (type guards in the helpers)
+  let cleanedTargetPitch = cleanPitch(targetPitch);
+  let cleanedStartingPitch = cleanPitch(startingPitch);
+  let direction = determineDirection(targetPitch, targetOctave);
+  let currentIndex = notesArray.indexOf(cleanedStartingPitch);
+  let currentOctave = startingOctave;
   let n = 0;
   let len = notesArray.length;
-  if (cleanedPitch[1] === "#" || cleanedPitch[1] === "b") {
+  // If note has extension need to make sure we iterate past the note without extension (if we have C# we don't want to stop on C)
+  if (cleanedTargetPitch[1] === "#" || cleanedTargetPitch[1] === "b") {
     while (
-      !notesArray[currentIndex].includes(cleanedPitch) ||
-      currentOctave !== octave
+      !notesArray[currentIndex].includes(cleanedTargetPitch) ||
+      currentOctave !== targetOctave
     ) {
       if (direction === "forward") {
         currentIndex = (currentIndex + 1) % len;
@@ -91,9 +100,10 @@ export function findNumberOfSemitones(pitch, octave) {
       }
     }
   } else {
+    // note has no extension so we need to look for exact note in array
     while (
-      notesArray[currentIndex] !== cleanedPitch ||
-      currentOctave !== octave
+      notesArray[currentIndex] !== cleanedTargetPitch ||
+      currentOctave !== targetOctave
     ) {
       if (direction === "forward") {
         currentIndex = (currentIndex + 1) % len;
@@ -109,9 +119,25 @@ export function findNumberOfSemitones(pitch, octave) {
 
   return n;
 }
-
+// default reference value is 440 for standard equal temperment values
+export function findFrequency(pitch, octave, refValue = 440) {
+  if (
+    typeof pitch !== "string" ||
+    typeof octave !== "number" ||
+    typeof refValue !== "number"
+  ) {
+    console.log("Invalid parameter type");
+    return;
+  }
+  let cleanedPitch = cleanPitch(pitch);
+  let n = findNumberOfSemitones(cleanedPitch, octave);
+  let a = 2 ** (1 / 12);
+  return refValue * a ** n;
+}
+// if n is calculated for frequency, we can enter the optional third param and avoid recalculating it in the function (Now the value of n can be recycled in factory functions)
 export function findMidiValue(pitch, octave, numberOfSemitones = undefined) {
-  if (numberOfSemitones !== undefined && numberOfSemitones !== null) return 69 + numberOfSemitones;
+  if (numberOfSemitones !== undefined && numberOfSemitones !== null)
+    return 69 + numberOfSemitones;
   let cleanedPitch = cleanPitch(pitch);
   let n = findNumberOfSemitones(cleanedPitch, octave);
   let midiValue = 69 + n;
