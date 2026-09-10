@@ -12,6 +12,17 @@ export const notesArray = [
   "G",
   "G#/Ab",
 ];
+export function convertToSymbols(string) {
+  if (string !== "sharp" && string !== "flat") {
+    console.log(`Invalid extension`);
+    return;
+  }
+  const stringMap = {
+    sharp: "#",
+    flat: "b",
+  };
+  return stringMap[string];
+}
 
 export function cleanPitch(pitch) {
   // type guards
