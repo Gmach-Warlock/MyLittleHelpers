@@ -81,7 +81,7 @@ export function determineDirection(pitch, octave) {
   return direction;
 }
 // determine number of semitones between two notes. The default starting note is A4. Optional parameters to change the starting note.
-export function findNumberOfSemitones(
+export function findNForEqualTemp(
   targetPitch,
   targetOctave,
   startingPitch = "A",
@@ -92,7 +92,7 @@ export function findNumberOfSemitones(
   let cleanedStartingPitch = cleanPitch(startingPitch);
   let direction = determineDirection(targetPitch, targetOctave);
   let currentIndex = notesArray.indexOf(cleanedStartingPitch);
-  let currentOctave = startingOctave;
+  let currentOctave = cleanOctave(startingOctave);
   let n = 0;
   let len = notesArray.length;
   // If note has extension need to make sure we iterate past the note without extension (if we have C# we don't want to stop on C)
@@ -141,18 +141,16 @@ export function findFrequency(pitch, octave, refValue = 440) {
     return;
   }
   let cleanedPitch = cleanPitch(pitch);
-  let n = findNumberOfSemitones(cleanedPitch, octave);
+  let n = findNForEqualTemp(cleanedPitch, octave);
   let a = 2 ** (1 / 12);
   return refValue * a ** n;
 }
 // if n is calculated for frequency, we can enter the optional third param and avoid recalculating it in the function (Now the value of n can be recycled in factory functions)
-export function findMidiValue(pitch, octave, numberOfSemitones = undefined) {
-  if (numberOfSemitones !== undefined && numberOfSemitones !== null)
-    return 69 + numberOfSemitones;
+export function findMidiValue(pitch, octave, n = undefined) {
+  if (n !== undefined && n !== null) return 69 + n;
   let cleanedPitch = cleanPitch(pitch);
-  let n = findNumberOfSemitones(cleanedPitch, octave);
+  let cleanedOctave = cleanOctave(octave);
+  let n = findNForEqualTemp(cleanedPitch, cleanedOctave);
   let midiValue = 69 + n;
   return midiValue;
 }
-
-console.log(findMidiValue("C", 4));

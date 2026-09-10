@@ -1,17 +1,26 @@
 // There are two intervals represented by the same distance
 // Major, minor Perfect Intervals ans Diminished Augmented Intervals
 
-export function findInterval(distance, intervalType) {
+export function findInterval(
+  distance,
+  key = "name",
+  intervalType = "standard"
+) {
   /*   if (
     (distance !== "number" && distance !== "string") ||
-    (intervalType !== "majMin" && intervalType !== "dimAug")
+    (intervalType !== "standard" && intervalType !== "dimAug")
   ) {
     console.log(`Invalid parameter type`);
     return;
   } */
-  let propName = "d" + String(distance);
+  if (key !== "name" && key !== "abbrev") {
+    console.log(`Invalid parameter type.`);
+    return;
+  }
+
+  let prop1 = "d" + String(distance);
   const intervalMap = {
-    majMin: {
+    standard: {
       d0: {
         name: "Perfect Unison",
         abbrev: "P1/O",
@@ -120,9 +129,8 @@ export function findInterval(distance, intervalType) {
       },
     },
   };
-  console.log(distance, intervalType, propName);
-  let keyName = "name";
-  return intervalMap[intervalType][propName];
+  console.log(distance, intervalType, prop1);
+  return intervalMap[intervalType][prop1][key];
 }
 
-console.log(findInterval(3, "dimAug"));
+console.log(findInterval(4), "abbrev");
