@@ -61,6 +61,18 @@ export function cleanPitch(pitch) {
   }
   return note + extension;
 }
+export function cleanOctave(octave) {
+  if (typeof octave !== "number" && typeof octave !== "string") {
+    console.log(`Invalid octave type`);
+    return;
+  }
+  octave = Number(octave);
+  if (octave < 0 || octave > 8) {
+    console.log(`Octave is out of range`);
+    return;
+  }
+  return octave;
+}
 // determine direction a note is from A4. This is used to find frequency in equal temperment scale.
 export function determineDirection(pitch, octave) {
   const isAboveA = ["A#", "Bb", "A#/Bb", "B"].includes(pitch);
@@ -116,7 +128,6 @@ export function findNumberOfSemitones(
       }
     }
   }
-
   return n;
 }
 // default reference value is 440 for standard equal temperment values

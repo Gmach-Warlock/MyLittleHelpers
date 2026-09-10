@@ -1,3 +1,5 @@
+import { notesArray } from "./midiNote";
+
 export const scaleMap = {
   // ionian = major
   ionian: [0, 2, 4, 5, 7, 9, 11], // T,T,S,T,T,T,S
@@ -13,3 +15,22 @@ export const scaleMap = {
   harmonicMinor: [0, 2, 3, 5, 7, 8, 11], // T,S,T,T,S,TS,S
   melodicMinor: [0, 2, 3, 5, 7, 9, 11], // T,S,T,T,T,T,S
 };
+
+export function cleanScaleName(scaleName) {
+  if (typeof scaleName !== "string") {
+    console.log(`Invalid parameter type on scaleName`);
+    return;
+  }
+}
+
+export function composeScaleOject(pitch, octave, scaleType) {
+  // guards
+  if (
+    typeof pitch !== "string" ||
+    typeof octave !== "number" ||
+    typeof scaleType !== "string"
+  ) {
+    console.log(`Invalid paramter type`);
+    return;
+  }
+}
